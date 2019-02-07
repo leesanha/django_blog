@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content%}
+<section class="home">
+    <div class="title"><h1>Algorithm Board</h1></div>
+    <a href="{% url 'al_new' %}"><button  type="button" class="btn btn-primary">글쓰기</button></a>
+    <div class="form">
+        {% for post in posts.all %}
+            <div class="container">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                            <a href="{% url 'al_detail' post.id %}"><h5 class="card-title">{{post.title}}</h5></a>
+                        <p class="card-text" id="summary-{{post.id}}">{{post.summary}}</p><button class="btn-{{post.id}}"onclick="abc({{post.id}})">...more</button>
+                        <p class="card-text">{{post.pub_date}}</p>
+                    </div>
+                </div>  
+            </div>
+        {% endfor %}
+    </div>
+</section>
+
+<script>
+    function abc(post_id){
+        $.ajax({
+            type: "POST",
+            url: "/algorithm/more/",
+            data: {'pk': post_id, 'csrfmiddlewaretoken':'{{csrf_token}}'},
+            dataType: "json",
+            success: function(res){
+                console.log(res.body);
+                $("#summary-"+post_id).replaceWith('<p>'+res.body+'</p>')
+                $(".btn-"+post_id).remove();
+            },
+            error: function(request, status, error){
+                alert(error);
+            },
+        });
+    }
+</script>
+
+{% endblock content %}
