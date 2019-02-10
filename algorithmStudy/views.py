@@ -3,11 +3,16 @@ from django.utils import timezone
 from django.http import HttpResponse
 import json
 from .models import Post
+from django.core.paginator import Paginator
 
 # Create your views here.
 def board(request):
     posts = Post.objects
-    return render(request, "algorithm/board.html", {'posts': posts})
+    post_list = Post.objects.all()
+    paginator = Paginator(post_list,3)
+    page = request.GET.get('page')
+    board = paginator.get_page(page)
+    return render(request, "algorithm/board.html", {'posts': posts, 'board':board})
 
 def new(request):
     return render(request, "algorithm/new.html")

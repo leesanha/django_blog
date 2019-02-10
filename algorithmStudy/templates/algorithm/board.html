@@ -5,7 +5,7 @@
     <div class="title"><h1>Algorithm Board</h1></div>
     <a href="{% url 'al_new' %}"><button  type="button" class="btn btn-primary">글쓰기</button></a>
     <div class="form">
-        {% for post in posts.all %}
+        {% for post in board %}
             <div class="container">
                 <div class="card" style="width: 18rem;">
                     <div class="card-body">
@@ -18,7 +18,19 @@
         {% endfor %}
     </div>
 </section>
-
+<div class="container">
+    {% if board.has_previous %}
+        <a href="?page=1">First</a>
+        <a href="?page={{board.previous_page_number}}">previous</a>
+    {% endif %}
+    <span>{{board.number}}</span>
+    <span>of</span>
+    <span>{{board.paginator.num_pages}}</span>
+    {% if board.has_next %}
+    <a href="?page={{board.next_page_number}}">Next</a>
+    <a href="?page={{board.paginator.num_pages}}">Last</a>
+    {% endif %}
+</div>
 <script>
     function abc(post_id){
         $.ajax({
